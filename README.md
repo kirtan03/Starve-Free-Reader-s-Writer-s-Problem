@@ -18,26 +18,26 @@ int read_count = 0;
 //reader's process:
 {
     wait(turn);  //waiting for its turn for execution
-    wait(read_mutex); //ensuring only one read process gets the chance to             
+    wait(read_mutex); //ensuring mutuqal exclusion for read process to             
                       // update read_count
     read_count++;
     if(read_count==1){
         wait(write_mutex); //first reader will ask for resource 
                             //access for readers
     }
-    signal(read_mutex); //releasing access for updation of read count
+    signal(read_mutex); 
     signal(turn);
 
     /reading is performed/
     /critical section/
 
     wait(read_mutex); //ensuring only one read process gets the chance
-                        // to update read_cnt
+                        // to update read_count
     read_count--;
     if(read_count==0){
-        signal(write_mutex); //freeing the resources for writers to write
+        signal(write_mutex);
     }
-    signal(read_mutex);   //releasing access for updation of read count
+    signal(read_mutex); 
 }
 
 //writer's process:
@@ -49,10 +49,8 @@ int read_count = 0;
     /writing is performed/
     /critical section/
 
-    signal(write_mutex); //releasing the resource for the other reader
-                        // or writer process
-    signal(turn); //Signalling the next reader or writer process in
-                    // turn queue to wakeup 
+    signal(write_mutex); 
+    signal(turn); 
 }
 ```
 
